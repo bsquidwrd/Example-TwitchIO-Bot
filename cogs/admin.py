@@ -1,5 +1,6 @@
 from twitchio.ext import commands
 import traceback
+from cogs.utils import checks
 
 
 class Admin(commands.AutoCog):
@@ -16,6 +17,7 @@ class Admin(commands.AutoCog):
         pass
 
     @commands.command(name='unload')
+    @commands.check(checks.is_owner)
     async def unload(self, ctx, *, module):
         try:
             self.bot.unload_module(module)
@@ -27,6 +29,7 @@ class Admin(commands.AutoCog):
 
 
     @commands.command(name='load')
+    @commands.check(checks.is_owner)
     async def load(self, ctx, *, module):
         try:
             self.bot.load_module(module)
@@ -38,6 +41,7 @@ class Admin(commands.AutoCog):
 
 
     @commands.command(name='reload')
+    @commands.check(checks.is_owner)
     async def _reload(self, ctx, *, module):
         try:
             self.bot.unload_module(module)
@@ -47,6 +51,21 @@ class Admin(commands.AutoCog):
             print(traceback.format_exc())
         else:
             await ctx.send(f'\'{module}\' reloaded')
+
+
+    @commands.command(name='restart')
+    @commands.check(checks.is_owner)
+    async def _restart(self, ctx):
+        try:
+            await ctx.send('Goodbye for now o/')
+            # I can't find a better way to make it exit
+            # but that's probably because I'm retarded
+            # I've checked the WebSocketConnection.teardown()
+            # and nothing ;-;
+            raise SystemExit(2)
+        except Exception as e:
+            await ctx.send(f'Whoops, I couldn\'t actually restart. Please check console for details {ctx.author.name}')
+            print(traceback.format_exc())
 
 
 def prepare(bot):
