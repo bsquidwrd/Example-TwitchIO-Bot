@@ -1,4 +1,6 @@
 from twitchio.ext import commands
+from twitchio import dataclasses
+from cogs.utils import checks
 
 
 class Basic(commands.AutoCog):
@@ -20,9 +22,18 @@ class Basic(commands.AutoCog):
 
     
     @commands.command(name='getid')
-    async def getid_command(self, ctx):
-        if ctx.channel.name == self.bot.nick:
-            await ctx.send(f'{ctx.author.name}, your ID is {ctx.author.id}!')
+    async def getid_command(self, ctx, *, user : str = None):
+        if ctx.channel.name == self.bot.nick or checks.is_owner(ctx):
+            if user:
+                possible_users = await self.bot.get_users(user)
+                if len(possible_users) == 0:
+                    await ctx.send(f'{ctx.author.name}, no users found with username \'{user}\'')
+                    return
+                else:
+                    u = possible_users[0]
+            else:
+                u = ctx.author
+            await ctx.send(f'{ctx.author.name}, ID = {u.id}!')
 
 
     @commands.command(name='test')

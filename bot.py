@@ -12,7 +12,6 @@ import environment
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s %(module)s %(name)s.%(funcName)s +%(lineno)s: %(levelname)-8s [%(process)d] %(message)s',
                     )
-# log = logging.getLogger(__name__)
 initial_extensions = (
     'cogs.admin',
     'cogs.basic',
@@ -77,6 +76,8 @@ class Bot(commands.Bot):
 if __name__ == '__main__':
     nick = os.environ['BOT_NICK']
     irc_token = os.environ['BOT_TOKEN']
+    client_id = os.getenv('BOT_CLIENTID', None)
+
     initial_channels = [nick, 'bsquidwrd']
-    bot = Bot(irc_token=irc_token, nick=nick, initial_channels=initial_channels)
+    bot = Bot(irc_token=irc_token, client_id=client_id, nick=nick, initial_channels=initial_channels)
     bot.run()
